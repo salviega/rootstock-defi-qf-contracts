@@ -13,8 +13,8 @@
 		"compile": "hardhat compile",
 		"deploy": "hardhat deploy",
 		"deploy:rsktestnet": "hardhat run --network rsktestnet scripts/deploy.ts",
+		"deploy:localhost": "hardhat run --network localhost scripts/deploy.ts",
 		"deploy-strategy:rsktestnet": "hardhat run --network rsktestnet scripts/deployStrategy.ts",
-		"deploy:local": "hardhat run --network localhost scripts/deploy.ts",
 		"format": "prettier --write \"./**/*.{js,jsx,ts,tsx,sol}\"",
 		"test": "REPORT_GAS=true hardhat test",
 		"typechain": "yarn hardhat typechain"

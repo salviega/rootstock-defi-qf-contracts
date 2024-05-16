@@ -15,6 +15,7 @@ interface Accounts {
 
 interface Contracts {
 	networkName: string
+	generateProfileId: any
 	doCMock: any
 	registryInstance: any
 	alloInstance: any
@@ -67,7 +68,7 @@ async function main() {
 
 	contracts = await deployContracts()
 
-	const { registryInstance } = contracts
+	const { generateProfileId, registryInstance } = contracts
 
 	const adminDir = path.join('admin', contracts.networkName)
 	const adminFile = path.join(adminDir, 'admin.json')
@@ -108,23 +109,28 @@ async function main() {
 
 	await createProfileTx.wait()
 
-	const transactionReceipt = await ethers.provider.getTransactionReceipt(
-		createProfileTx.hash
-	)
-	const transactionBlockNumber = transactionReceipt.blockNumber
+	// const transactionReceipt = await ethers.provider.getTransactionReceipt(
+	// 	createProfileTx.hash
+	// )
+	// const transactionBlockNumber = transactionReceipt.blockNumber
 
-	const events = await registryInstance.queryFilter(
-		'ProfileCreated',
-		transactionBlockNumber
-	)
-	const event = events[events.length - 1]
+	// const events = await registryInstance.queryFilter(
+	// 	'ProfileCreated',
+	// 	transactionBlockNumber
+	// )
+	// const event = events[events.length - 1]
 
-	const adminProfileId = event.args.profileId
+	// const adminProfileId = event.args.profileId
+	const adminProfileId = await generateProfileId.generateProfileId(
+		adminNonce,
+		admin.address
+	)
 	const adminProfileDto = await registryInstance.getProfileById(adminProfileId)
 	const adminProfile: Profile = dtoToProfile(adminProfileDto)
 
 	adminJson.profile = adminProfile
 	fs.writeFileSync(adminFile, JSON.stringify(adminJson))
+	console.log(' ✅  Profile created')
 }
 
 async function deployContracts() {
@@ -141,6 +147,10 @@ async function deployContracts() {
 	}
 
 	const [owner] = await ethers.getSigners()
+
+	// Deploy GenerateProfileId contract
+	const generateProfileId = await deployContract('GenerateProfileId', [])
+	const generateProfileIdTx = generateProfileId.deploymentTransaction()
 
 	// Deploy DAIMock contract
 	const doCMock = await deployContract('DoCMock', [])
@@ -209,6 +219,7 @@ async function deployContracts() {
 	// Log deployed contracts
 	console.log('\n 📜 Deployed contracts')
 	console.table({
+		generateProfileId: await generateProfileId.getAddress(),
 		doCMock: await doCMock.getAddress(),
 		registryInstance: registryInstanceAddress,
 		registryImplementation: registryImplementationAddress,
@@ -218,6 +229,11 @@ async function deployContracts() {
 	})
 
 	const contractsDeployed = {
+		generateProfileId: {
+			blockNumber: generateProfileIdTx?.blockNumber,
+			address: await generateProfileId.getAddress(),
+			abi: JSON.parse(generateProfileId.interface.formatJson())
+		},
 		doCMock: {
 			blockNumber: doCMockTx?.blockNumber,
 			address: await doCMock.getAddress(),
@@ -247,6 +263,7 @@ async function deployContracts() {
 	// Return all deployed contracts
 	return {
 		networkName,
+		generateProfileId,
 		doCMock,
 		registryInstance,
 		alloInstance,

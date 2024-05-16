@@ -1,4 +1,4 @@
-import contractsJson from '../deployments/bsctestnet/deployments.json'
+import contractsJson from '../deployments/rsktestnet/deployments.json'
 
 import dotenv from 'dotenv'
 import { ethers } from 'ethers'
@@ -6,7 +6,7 @@ import { ethers } from 'ethers'
 dotenv.config()
 
 const {
-	ROOTSTOCK_RPC_URL,
+	RSK_TESTNET_RPC_URL,
 	WALLET1_PRIVATE_KEY,
 	WALLET2_PRIVATE_KEY,
 	WALLET3_PRIVATE_KEY,
@@ -17,8 +17,8 @@ const {
 	WALLET8_PRIVATE_KEY
 } = process.env
 
-if (!ROOTSTOCK_RPC_URL) {
-	throw new Error('ROOTSTOCK_RPC_URL is not set')
+if (!RSK_TESTNET_RPC_URL) {
+	throw new Error('RSK_TESTNET_RPC_URL is not set')
 }
 
 if (!WALLET1_PRIVATE_KEY) {
@@ -53,7 +53,7 @@ if (!WALLET8_PRIVATE_KEY) {
 	throw new Error('WALLET8_PRIVATE_KEY is not set')
 }
 
-const provider = new ethers.JsonRpcProvider(ROOTSTOCK_RPC_URL)
+const provider = new ethers.JsonRpcProvider(RSK_TESTNET_RPC_URL)
 const signer = new ethers.Wallet(WALLET1_PRIVATE_KEY, provider)
 
 const registryContract = new ethers.Contract(
@@ -63,19 +63,21 @@ const registryContract = new ethers.Contract(
 )
 
 const recipients = [
-	WALLET2_PRIVATE_KEY,
-	WALLET3_PRIVATE_KEY,
-	WALLET4_PRIVATE_KEY,
-	WALLET5_PRIVATE_KEY,
-	WALLET6_PRIVATE_KEY,
-	WALLET7_PRIVATE_KEY,
-	WALLET8_PRIVATE_KEY
+	new ethers.Wallet(WALLET2_PRIVATE_KEY).address,
+	new ethers.Wallet(WALLET3_PRIVATE_KEY).address,
+	new ethers.Wallet(WALLET4_PRIVATE_KEY).address,
+	new ethers.Wallet(WALLET5_PRIVATE_KEY).address,
+	new ethers.Wallet(WALLET6_PRIVATE_KEY).address,
+	new ethers.Wallet(WALLET7_PRIVATE_KEY).address,
+	new ethers.Wallet(WALLET8_PRIVATE_KEY).address
 ]
 
 async function addMembers() {
 	try {
+		console.log('Adding members to the registry... \n')
+
 		const addMemberTx = await registryContract.addMembers(
-			'0xbd71c97162a5a1b0c45de7e244d7aa9b028ac578b6a136f356edd0df7a84bb59',
+			'0xd9cf080ed95e558cfb8bd37a61758a18f7c3bf79221811f810879ac73862e3d8',
 			recipients
 		)
 		await addMemberTx.wait()

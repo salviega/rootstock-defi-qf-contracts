@@ -8,7 +8,9 @@ import 'dotenv/config'
 import 'hardhat-celo'
 import 'hardhat-deploy'
 
-require('dotenv').config()
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const {
 	RSK_TESTNET_RPC_URL,
@@ -95,15 +97,22 @@ const config: CustomHardhatConfig = {
 			allowUnlimitedContractSize: true
 		},
 		localhost: {
-			chainId: 1337,
-			allowUnlimitedContractSize: true
+			accounts: [ACCOUNTS[0], ACCOUNTS[1]],
+			// allowUnlimitedContractSize: true
+			chainId: 31,
+			// gas: GAS,
+			// gasPrice: GAS_PRICE,
+			url: 'http://127.0.0.1:4444'
 		},
 		rsktestnet: {
 			accounts: [ACCOUNTS[0], ACCOUNTS[1]],
 			chainId: 31,
 			// gas: GAS,
 			// gasPrice: GAS_PRICE,
-			url: RSK_TESTNET_RPC_URL
+			url:
+				RSK_TESTNET_RPC_URL ||
+				'https://public-node.testnet.rsk.co' ||
+				'https://mycrypto.testnet.rsk.co'
 		}
 	},
 	etherscan: {
