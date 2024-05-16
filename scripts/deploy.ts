@@ -244,10 +244,16 @@ async function deployContracts() {
 			address: registryInstanceAddress,
 			abi: JSON.parse(Registry.interface.formatJson())
 		},
+		registryImplementation: {
+			address: registryImplementationAddress
+		},
 		alloInstance: {
 			blockNumber: alloInstanceTx?.blockNumber,
 			address: alloInstanceAddress,
 			abi: JSON.parse(Allo.interface.formatJson())
+		},
+		alloImplementation: {
+			address: alloImplementationAddress
 		},
 		qVSimpleStrategyContract: {
 			blockNumber: qVSimpleStrategyTx?.blockNumber,
