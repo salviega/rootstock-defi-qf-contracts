@@ -4,7 +4,7 @@ Bitcoin Meets Solidity - Rootstock Hackathon
 
 ### 📜 Deployed contracts
 
-| (Contracts)              | Address                                        |
+| Contracts                | Addresses                                      |
 | ------------------------ | ---------------------------------------------- |
 | generateProfileId        | '0xE73e05402cC9D72404Ad48545035B0e4C0D52D4400' |
 | doCMock                  | '0xfA42895848eBD894C5E32C3Fa4196906C52050'     |
