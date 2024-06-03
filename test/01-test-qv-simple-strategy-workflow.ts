@@ -22,7 +22,7 @@ interface Accounts {
 }
 
 interface Contracts {
-	daiMock: any
+	docMock: any
 	registryInstance: any
 	alloInstance: any
 	qVSimpleStrategyContract: any
@@ -82,7 +82,7 @@ interface Milestone {
 	status: bigint
 }
 
-describe('Cuadratic Sciencie Flow', async function () {
+describe('Rootstock DeFi QF', async function () {
 	function toDecimal(value: number): bigint {
 		return BigInt(value * 10 ** 18)
 	}
@@ -144,13 +144,13 @@ describe('Cuadratic Sciencie Flow', async function () {
 		// Arrange
 		const { alice, bob, kyle } = accounts
 		const {
-			daiMock,
+			docMock,
 			registryInstance,
 			alloInstance,
 			qVSimpleStrategyContract
 		} = contracts
 
-		const daiMockAddress: string = await daiMock.getAddress()
+		const docMockAddress: string = await docMock.getAddress()
 
 		const qVSimpleStrategyAddress: string =
 			await qVSimpleStrategyContract.getAddress()
@@ -316,15 +316,15 @@ describe('Cuadratic Sciencie Flow', async function () {
 		// Create pool
 		console.log(' 🚩  3. Create pool')
 
-		const mintTx = await daiMock.connect(alice).mint(toDecimal(1000))
+		const mintTx = await docMock.connect(alice).mint(toDecimal(1000))
 		await mintTx.wait()
 
-		const approveTx = await daiMock
+		const approveTx = await docMock
 			.connect(alice)
 			.approve(await alloInstance.getAddress(), toDecimal(1000))
 		await approveTx.wait()
 
-		const aliceBalanceBefore = await daiMock.balanceOf(alice.address)
+		const aliceBalanceBefore = await docMock.balanceOf(alice.address)
 
 		const createPoolTx = await alloInstance
 			.connect(alice)
@@ -332,7 +332,7 @@ describe('Cuadratic Sciencie Flow', async function () {
 				aliceProfileId, // _profileId
 				qVSimpleStrategyAddress, // _strategy
 				aliceInitStrategyData, // _initStrategyData
-				daiMockAddress, // _token
+				docMockAddress, // _token
 				poolFundingAmount, // _amount
 				[alicePoolMetadata.protocol, alicePoolMetadata.pointer], // _metadata
 				alicePoolManagers // _managers
@@ -371,7 +371,7 @@ describe('Cuadratic Sciencie Flow', async function () {
 			alicePool.strategy
 		)
 
-		const aliceStrategyContractBalanceBefore = await daiMock.balanceOf(
+		const aliceStrategyContractBalanceBefore = await docMock.balanceOf(
 			alicePool.strategy
 		)
 
@@ -456,10 +456,10 @@ describe('Cuadratic Sciencie Flow', async function () {
 		// 6. Fund pool
 		console.log(' 🚩  6. Fund pool')
 
-		const mintTx2 = await daiMock.connect(kyle).mint(toDecimal(2000))
+		const mintTx2 = await docMock.connect(kyle).mint(toDecimal(2000))
 		await mintTx2.wait()
 
-		const approveTx2 = await daiMock
+		const approveTx2 = await docMock
 			.connect(kyle)
 			.approve(await alloInstance.getAddress(), toDecimal(2000))
 		await approveTx2.wait()
@@ -560,7 +560,7 @@ describe('Cuadratic Sciencie Flow', async function () {
 		timeToMoveForward += 60
 		await moveTime(timeToMoveForward)
 
-		const bobBalanceBefore = await daiMock.balanceOf(bob.address)
+		const bobBalanceBefore = await docMock.balanceOf(bob.address)
 
 		const distibuteTx = await alloInstance
 			.connect(alice)
@@ -568,11 +568,11 @@ describe('Cuadratic Sciencie Flow', async function () {
 
 		await distibuteTx.wait()
 
-		const bobBalanceAfter = await daiMock.balanceOf(bob.address)
+		const bobBalanceAfter = await docMock.balanceOf(bob.address)
 
-		const aliceBalanceAfter = await daiMock.balanceOf(alice.address)
+		const aliceBalanceAfter = await docMock.balanceOf(alice.address)
 
-		const aliceStrategyContractBalanceAfter = await daiMock.balanceOf(
+		const aliceStrategyContractBalanceAfter = await docMock.balanceOf(
 			await aliceStrategyContract.getAddress()
 		)
 
@@ -600,9 +600,9 @@ describe('Cuadratic Sciencie Flow', async function () {
 async function deployContracts() {
 	const [owner] = await ethers.getSigners()
 
-	// Deploy DAIMock contract
+	// Deploy DoCMock contract
 
-	const daiMock = await deployContract('DAIMock', [])
+	const docMock = await deployContract('DoCMock', [])
 
 	// Deploy Registry contract
 
@@ -649,7 +649,7 @@ async function deployContracts() {
 
 	// Return all deployed contracts
 	return {
-		daiMock,
+		docMock,
 		registryInstance,
 		alloInstance,
 		qVSimpleStrategyContract

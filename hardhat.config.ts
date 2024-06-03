@@ -78,7 +78,7 @@ const ACCOUNTS: string[] = [
 ]
 
 const GAS: number = 30000000 // gas limit (max 30000000)
-const GAS_PRICE: number = 10000000000
+const GAS_PRICE: number = 10000000000 // gas price (max 10000000000)
 
 const SOLC_SETTINGS = {
 	optimizer: {
